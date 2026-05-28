@@ -35,6 +35,10 @@ repositories {
         name = "scarsz"
     }
 
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/") {
+        name = "placeholderapi"
+    }
+
     maven("https://jitpack.io")
 
 }
@@ -68,6 +72,7 @@ dependencies {
     compileOnly("com.discordsrv:discordsrv:1.28.0")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("net.dmulloy2:ProtocolLib:5.4.0") // packets :agony:
+    compileOnly("me.clip:placeholderapi:2.11.6")
     
     // http
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
@@ -109,7 +114,7 @@ bukkitPluginYaml {
     main = "dev.lizainslie.cafemc.CafeMC"
     load = BukkitPluginYaml.PluginLoadOrder.STARTUP
     apiVersion = "1.21.10"
-    softDepend = listOf("TAB", "Vault")
+    softDepend = listOf("TAB", "Vault", "PlaceholderAPI")
     loadBefore = listOf("Vault")
     depend = listOf("ProtocolLib")
     
