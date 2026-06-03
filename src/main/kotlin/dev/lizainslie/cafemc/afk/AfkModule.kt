@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 object AfkModule : PluginModule(), Listener {
     private val afkMap = mutableMapOf<Player, Boolean>()
     private val idleMap = mutableMapOf<Player, Int>()
+    private var placeholderExpansion: CafePlaceholderExpansion? = null
     
     const val IDLE_TIMEOUT = 300 // 5 minutes
     
@@ -74,6 +75,9 @@ object AfkModule : PluginModule(), Listener {
     fun isAfk(player: Player): Boolean {
         return afkMap[player] ?: false
     }
+
+    val afkPlayerCount: Int
+        get() = Bukkit.getOnlinePlayers().count { isAfk(it) }
     
     // endregion
     
@@ -147,6 +151,8 @@ object AfkModule : PluginModule(), Listener {
 
     override fun onDisable(cafeMC: CafeMC) {
         super.onDisable(cafeMC)
+        placeholderExpansion?.unregister()
+        placeholderExpansion = null
         
         // Clear all AFK statuses
         
@@ -156,6 +162,23 @@ object AfkModule : PluginModule(), Listener {
         }
         
         afkMap.clear()
+    }
+
+    override fun onEnable(cafeMC: CafeMC) {
+        super.onEnable(cafeMC)
+
+        if (!Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            cafeMC.logger.info("PlaceholderAPI not found; AFK placeholders disabled.")
+            return
+        }
+
+        placeholderExpansion = CafePlaceholderExpansion().also {
+            if (it.register()) {
+                cafeMC.logger.info("Registered PlaceholderAPI expansion: cafemc")
+            } else {
+                cafeMC.logger.warning("Failed to register PlaceholderAPI expansion: cafemc")
+            }
+        }
     }
     
     // endregion
