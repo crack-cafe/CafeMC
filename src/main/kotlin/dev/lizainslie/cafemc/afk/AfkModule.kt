@@ -15,7 +15,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerMoveEvent
+import org.bukkit.event.player.PlayerInputEvent
 import org.bukkit.event.player.PlayerQuitEvent
 
 object AfkModule : PluginModule(), Listener {
@@ -31,8 +31,8 @@ object AfkModule : PluginModule(), Listener {
     // region Event Handlers
     
     @EventHandler
-    fun onPlayerMove(event: PlayerMoveEvent) {
-        // Reset idle time and remove AFK status when player moves
+    fun onPlayerInput(event: PlayerInputEvent) {
+        // Reset idle time and remove AFK status when player sends movement input.
         if (isAfk(event.player)) toggleAfk(event.player)
         idleMap[event.player] = 0
     }
